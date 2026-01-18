@@ -72,7 +72,7 @@ function mostrarModelos(e)
 
     let marcaSeleccionada = arrayMarcasModelos.find(marca => marca.id == e.target.id);
 
-    document.getElementById("logo").src = "../media/" + marcaSeleccionada.urlimagen
+    document.getElementById("logo").src = "media/" + marcaSeleccionada.urlimagen
 
     while (modelos.firstChild) {
         modelos.removeChild(modelos.firstChild);
