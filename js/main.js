@@ -6,8 +6,9 @@ const tasaprima = 0.005;
 
 const arrayMarcasModelos = [
     {
-        itemMenu: "1",
+        id: "1",
         nombre: "Alfa Romeo",
+        urlimagen: "AlfaRomeo.jpg",
         modelos: [
           { id: "1111", itemMenu: "1", nombre: "147 1.9 JTD 5 PTAS", valorVehiculo: 12550000 },
           { id: "2222", itemMenu: "2", nombre: "147 2.0 TS 5 PTAS", valorVehiculo: 19210000 },
@@ -15,8 +16,9 @@ const arrayMarcasModelos = [
         ]
       },
       {
-        itemMenu: "2",
+        id: "2",
         nombre: "AUDI",
+        urlimagen: "Audi.jpg",
         modelos: [
           { id: "4444", itemMenu: "1", nombre: "A1 1.4T AMBITION", valorVehiculo: 28550000 },
           { id: "5555", itemMenu: "2", nombre: "A4 2.0 T L/12 ATTRACTION", valorVehiculo: 37250000 },
@@ -24,39 +26,20 @@ const arrayMarcasModelos = [
         ]
       },
       {
-        itemMenu: "3",
+        id: "3",
         nombre: "BMW",
+        urlimagen: "bmw.jpg",
         modelos: [
           { id: "7777", itemMenu: "1", nombre: "220I COUPE SPORT LINE", valorVehiculo: 28550000 }
         ]
       },
       {
-        itemMenu: "4",
+        id: "4",
+        urlimagen: "ferrari.jpg",
         nombre: "Ferrari",
         modelos: []
       }
 ]
-
-// ******************************************************
-// FUNCIONES DECLARATIVAS, ANÓNIMAS, Y FLECHA
-// ******************************************************
-
-// ARMA EL MENU DE MODELOS SEGÚN LA MARCA.
-function getOpcionesModelosPorMarca(itemMarcaMenu)
-{
-
-    let marcaSeleccionada = arrayMarcasModelos.find(marca => marca.itemMenu == itemMarcaMenu )
-
-    if (!marcaSeleccionada)
-        return undefined;
-
-    let opcionesModelos = "";
-    
-    for (modelo of marcaSeleccionada.modelos)
-        opcionesModelos += modelo.itemMenu + "-" + modelo.nombre + "\n";
-
-    return opcionesModelos;
-}
 
 // COTIZA UN SEGURO SEGÚN EL VALOR DEL VEHICULO Y LA TASA DE LA PRIMA.
 CotizarSeguro = function (valor) { return formatDecimales(valor * tasaprima)};
@@ -67,102 +50,60 @@ function formatDecimales(valor, cantDecimales)
     return valor.toFixed(cantDecimales).replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-// ******************************************************
-// LÓGICA PRINCIPAL
-// USO DE LET, FOR OF, PROMPT, CONFIRM, ALERT, SWITCH CASE, FUNCIÓN ToUpperCase, Arrays, función find, IF ELSE, DO WHILE.
-// ******************************************************
 
-const opcionesMarcas = arrayMarcasModelos
-  .map(m => `${m.itemMenu} - ${m.nombre}`)
-  .join("\n");
+let marcas = document.getElementById("marcas");
 
-let recotizar="S";
+arrayMarcasModelos.forEach(
+    (item, index) => 
+    {
+        let nuevoItemMarca = document.createElement('button');
+        nuevoItemMarca.id = item.id;
+        nuevoItemMarca.innerText = item.nombre;
+        nuevoItemMarca.addEventListener("click", mostrarModelos);
 
-do
+        marcas.appendChild(nuevoItemMarca);
+
+    }
+)
+
+function mostrarModelos(e)
 {
+    resultado.innerText = "";
 
-    // CONSULTA MARCA DEL VEHICULO.   
-    let opcionMarcaSeleccionada = prompt(
-        "BIENVENIDA/O AL COTIZADOR DE SEGUROS DE AUTOS:\n\nSeleccione la marca:\n" + opcionesMarcas + "\n\nS=SALIR");
+    let marcaSeleccionada = arrayMarcasModelos.find(marca => marca.id == e.target.id);
 
-    if(!opcionMarcaSeleccionada)
-    {
-        // SI HACE CLICK EN EL BOTÓN DE CANCELAR.
-        alert("Si desea salir del cotizador ingrese la opción S=SALIR");
-        continue;
+    document.getElementById("logo").src = "../media/" + marcaSeleccionada.urlimagen
+
+    while (modelos.firstChild) {
+        modelos.removeChild(modelos.firstChild);
     }
 
-    if (opcionMarcaSeleccionada.toUpperCase() == "S")
-    {
-        // SALIR.
-        recotizar="N";
-        continue;
-    }
-
-    let marcaSeleccionada = arrayMarcasModelos.find(marca => marca.itemMenu == opcionMarcaSeleccionada);
-
-    if (!marcaSeleccionada)
-    {
-        // MARCA NO EXISTE.
-        alert("El item del menú no existe!");
-        continue;
-    }
-
-    let opcionesModelos = getOpcionesModelosPorMarca(opcionMarcaSeleccionada)
-    
-    if (!opcionesModelos)
-    {
-        // MARCA SIN MODELOS PARA COTIZAR.
-        alert("Actualmente no se pueden cotizar modelos para la marca seleccionada.");
-        continue;
-    }
+    if (marcaSeleccionada.modelos.length === 0)
+      resultado.innerText = "No hay modelos cotizables para la marca seleccionada!"
 
 
-    // ARMA EL MENÚ DE MODELOS. USO DE FUNCIONES COMUNES.
-    let opcionModeloSeleccionado = prompt("Seleccione el modelo:\n" + getOpcionesModelosPorMarca(opcionMarcaSeleccionada) + "\nV=VOLVER \nS=SALIR");
+    marcaSeleccionada.modelos.forEach(
+        (item) => 
+        {
+            let nuevoItemModelo = document.createElement('button');
+            nuevoItemModelo.id = item.id;
+            nuevoItemModelo.innerText = item.nombre;
+            nuevoItemModelo.valorVehiculo = item.valorVehiculo;
+            nuevoItemModelo.addEventListener("click", (e) =>
+            {            
+                let resultado = document.getElementById("resultado");
 
-    if (!opcionModeloSeleccionado)
-        continue;
+                prima = CotizarSeguro(e.target.valorVehiculo)
 
-    opcionModeloSeleccionado = opcionModeloSeleccionado.toUpperCase();
+                resultado.innerText = "TOTAL A PAGAR: " +
+                    marcaSeleccionada.nombre +
+                    " " +
+                    e.target.innerText + 
+                    " ES DE: $" + prima + " + IVA.";
+                
+            })    
 
-    switch (opcionModeloSeleccionado)
-    {
-        case "S": recotizar="N"; break;
-        case "V": break;
-        default:
-
-            if (opcionModeloSeleccionado == "S")
-            {
-                // SALIR
-                recotizar="N";
-                continue;     
-            }       
-
-            let modeloSeleccionado = marcaSeleccionada.modelos.find(modelo => modelo.itemMenu == opcionModeloSeleccionado);
-            if (!modeloSeleccionado)
-            {
-                // SI INGRESA UN ITEM NO EXISTENTE
-                alert("El item del menú no existe!");
-                continue;
-            }
-
-            // LLAMADA A FUNCIÓN DE COTIZACION
-            let prima = CotizarSeguro(modeloSeleccionado.valorVehiculo);
-
-            // USO DEL CONFIRM
-
-            if (!confirm(
-                "LA COTIZACIÓN DEL SEGURO PARA EL VEHÍCULO " +
-                marcaSeleccionada.nombre +
-                " " +
-                modeloSeleccionado.nombre +
-                " ES DE: $" + prima + 
-                " + IVA.\n\n¿Desea cotizar otro vehículo?"))
-                    recotizar="N";
-
-            break;
-    }
-} while(recotizar.toUpperCase()=="S")
-
-alert("GRACIAS POR USAR NUESTRO COTIZADOR. HASTA LA PRÓXIMA!!")
+            modelos.appendChild(nuevoItemModelo);
+        }
+    )
+}
