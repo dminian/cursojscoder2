@@ -8,7 +8,7 @@ const arrayMarcasModelos = [
     {
         id: "1",
         nombre: "Alfa Romeo",
-        urlimagen: "AlfaRomeo.jpg",
+        urlimagen: "alfaromeo.jpg",
         modelos: [
           { id: "1111", itemMenu: "1", nombre: "147 1.9 JTD 5 PTAS", valorVehiculo: 12550000 },
           { id: "2222", itemMenu: "2", nombre: "147 2.0 TS 5 PTAS", valorVehiculo: 19210000 },
@@ -18,7 +18,7 @@ const arrayMarcasModelos = [
       {
         id: "2",
         nombre: "AUDI",
-        urlimagen: "Audi.jpg",
+        urlimagen: "audi.jpg",
         modelos: [
           { id: "4444", itemMenu: "1", nombre: "A1 1.4T AMBITION", valorVehiculo: 28550000 },
           { id: "5555", itemMenu: "2", nombre: "A4 2.0 T L/12 ATTRACTION", valorVehiculo: 37250000 },
